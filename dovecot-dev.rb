@@ -1,5 +1,5 @@
 class DovecotDev < Formula
-  desc "Test"
+  desc "IMAP/POP3 server"
   homepage "http://dovecot.org/"
   url "https://dovecot.org/releases/2.3/dovecot-2.3.14.tar.gz"
   version "2.3.14"
