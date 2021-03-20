@@ -20,8 +20,6 @@ class RspamdDev < Formula
   depends_on "sqlite3"
 
   def install
-    (var+"lib/rspamd").mkpath
-
 # Critical dependency note: port:pcre and port:pcre2 break the rspamd binary;
 # use native /usr/lib/libpcre.dylib.  See https://github.com/rspamd/rspamd/issues/2884
 
@@ -35,7 +33,7 @@ class RspamdDev < Formula
     -DLIBDIR=#{prefix}/lib
     -DDBDIR=#{var}/lib/rspamd
     -DLOGDIR=#{var}/log
-    -DRUNDIR=#{var}/run
+    -DRUNDIR=#{var}
     -DMANDIR=#{prefix}/share/man
     -DCMAKE_INSTALL_PREFIX=#{prefix}
     -DCONFDIR=#{etc}/rspamd
@@ -49,6 +47,11 @@ class RspamdDev < Formula
     system "make", "install"
 
   end
+
+def post_install
+  (var/"lib/rspamd").mkpath
+  (var/"run/rspamd").mkpath
+end
 
   def caveats
     <<~EOS
