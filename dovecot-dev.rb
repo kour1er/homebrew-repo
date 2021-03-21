@@ -75,6 +75,11 @@ class DovecotDev < Formula
     end
   end
 
+  def post_install
+    (var/"log").mkpath
+  end
+
+
   plist_options startup: true
 
   def plist
