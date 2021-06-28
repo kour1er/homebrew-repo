@@ -1,9 +1,9 @@
 class DovecotDev < Formula
   desc "IMAP/POP3 server"
   homepage "http://dovecot.org/"
-  url "https://dovecot.org/releases/2.3/dovecot-2.3.15.tar.gz"
-  version "2.3.15"
-  sha256 "21bbdd5d45957a99133de8b7e71813ecb73d9476c89dfc63479e9102b3553590"
+  url "https://dovecot.org/releases/2.3/dovecot-2.3.14.tar.gz"
+  version "2.3.14"
+  sha256 "c8b3d7f3af1e558a3ff0f970309d4013a4d3ce136f8c02a53a3b05f345b9a34a"
   license all_of: ["BSD-3-Clause", "LGPL-2.1-or-later", "MIT", "Unicode-DFS-2016", :public_domain]
 
   depends_on "openssl@1.1"
@@ -15,8 +15,8 @@ class DovecotDev < Formula
   uses_from_macos "sqlite"
 
   resource "pigeonhole" do
-    url "https://pigeonhole.dovecot.org/releases/2.3/dovecot-2.3-pigeonhole-0.5.15.tar.gz"
-    sha256 "e1498f50cef74c351a57474cc423b008627ab1ab60724b859283ead6d00550d0"
+    url "https://pigeonhole.dovecot.org/releases/2.3/dovecot-2.3-pigeonhole-0.5.14.tar.gz"
+    sha256 "68ca0f78a3caa6b090a469f45c395c44cf16da8fcb3345755b1ca436c9ffb2d2"
   end
 
   resource "xaps" do
