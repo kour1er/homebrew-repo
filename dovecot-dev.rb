@@ -3,7 +3,7 @@ class DovecotDev < Formula
   homepage "http://dovecot.org/"
   url "https://dovecot.org/releases/2.3/dovecot-2.3.19.1.tar.gz"
   version "2.3.19.1"
-  sha256 "05bf0f40088b362461daa69484ddede253ca499f231232f92a4df24d285ce2e0"
+  sha256 "db5abcd87d7309659ea6b45b2cb6ee9c5f97486b2b719a5dd05a759e1f6a5c51"
   license all_of: ["BSD-3-Clause", "LGPL-2.1-or-later", "MIT", "Unicode-DFS-2016", :public_domain]
 
   depends_on "pkg-config" => :build
