@@ -34,7 +34,7 @@ class DovecotDev < Formula
 
   resource "pigeonhole" do
     url "https://pigeonhole.dovecot.org/releases/2.3/dovecot-2.3-pigeonhole-0.5.19.tar.gz"
-    sha256 "b65d74e7e6f5e504f3911fff9535b8a64310f232474a8d5fe1b4ca5cba2a492f"
+    sha256 "637709a83fb1338c918e5398049f96b7aeb5ae00696794ed1e5a4d4c0ca3f688"
 
     # Fix -flat_namespace being used on Big Sur and later.
     patch do
