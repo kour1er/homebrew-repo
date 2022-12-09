@@ -6,39 +6,48 @@ class RspamdDev < Formula
   sha256 "f8d3e2b9a1a6ed6521c60fe505e97086624407f67366f0ce882eee433a53c355"
 
   depends_on "cmake"
+  depends_on "fann"
+  depends_on "gd"
   depends_on "glib-openssl"
+  depends_on "gmime"
   depends_on "hyperscan"
   depends_on "icu4c"
+  depends_on "kour1er/repo/libstemmer-dev"
   depends_on "libevent"
   depends_on "libmagic"
   depends_on "libsodium"
+  depends_on "lua"
   depends_on "luajit"
+  depends_on "openblas"
   depends_on "openssl@1.1"
+  depends_on "pcre2"
+  depends_on "perl"
   depends_on "pkgconfig"
   depends_on "ragel"
   depends_on "redis"
   depends_on "sqlite3"
+  depends_on "zlib"
 
   def install
-# Critical dependency note: port:pcre and port:pcre2 break the rspamd binary;
-# use native /usr/lib/libpcre.dylib.  See https://github.com/rspamd/rspamd/issues/2884
 
     args = %W[
     -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+    -DENABLE_FANN=ON
+    -DENABLE_GD=ON
     -DENABLE_HYPERSCAN=ON
     -DENABLE_LUAJIT=ON
+    -DENABLE_PCRE2=ON
     -DENABLE_SNOWBALL=ON
     -DENABLE_TORCH=ON
     -DINSTALL_EXAMPLES=ON
-    -DLIBDIR=#{prefix}/lib
-    -DDBDIR=#{var}/lib/rspamd
-    -DLOGDIR=#{var}/log
-    -DRUNDIR=#{var}
-    -DMANDIR=#{prefix}/share/man
+    -DNO_SHARED=ON
     -DCMAKE_INSTALL_PREFIX=#{prefix}
     -DCONFDIR=#{etc}/rspamd
-    -DNO_SHARED=ON
-    -DPCRE_ROOT_DIR=/usr/lib
+    -DDBDIR=#{var}/lib/rspamd
+    -DLIBDIR=#{prefix}/lib
+    -DLOGDIR=#{var}/log
+    -DMANDIR=#{prefix}/share/man
+    -DRUNDIR=#{var}
     ]
 
     system "cmake", *args
