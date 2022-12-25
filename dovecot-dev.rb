@@ -1,9 +1,9 @@
 class DovecotDev < Formula
   desc "IMAP/POP3 server"
   homepage "http://dovecot.org/"
-  url "https://dovecot.org/releases/2.3/dovecot-2.3.19.1.tar.gz"
-  version "2.3.19.1"
-  sha256 "db5abcd87d7309659ea6b45b2cb6ee9c5f97486b2b719a5dd05a759e1f6a5c51"
+  url "https://github.com/dovecot/core/archive/refs/tags/2.3.20.tar.gz"
+  version "2.3.20"
+  sha256 "f5faf1a4e325242ef2625f01fa6a0c2ae7b1f76d13826f72a48efe4d25b940bf"
   license all_of: ["BSD-3-Clause", "LGPL-2.1-or-later", "MIT", "Unicode-DFS-2016", :public_domain]
 
   depends_on "pkg-config" => :build
@@ -33,8 +33,8 @@ class DovecotDev < Formula
   # end
 
   resource "pigeonhole" do
-    url "https://pigeonhole.dovecot.org/releases/2.3/dovecot-2.3-pigeonhole-0.5.19.tar.gz"
-    sha256 "637709a83fb1338c918e5398049f96b7aeb5ae00696794ed1e5a4d4c0ca3f688"
+    url "https://pigeonhole.dovecot.org/releases/2.3/dovecot-2.3-pigeonhole-0.5.20.tar.gz"
+    sha256 "ae32bd4870ea2c1328ae09ba206e9ec12128046d6afca52fbbc9ef7f75617c98"
 
     # Fix -flat_namespace being used on Big Sur and later.
     patch do

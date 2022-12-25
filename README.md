@@ -10,3 +10,9 @@ brew tap kour1er/homebrew-repo
 - Libstemmer-dev
 
 - RSpamD-dev
+
+Note: For any local development, use:
+
+`brew sh`
+
+for the local shell to get the brew environment variables.
