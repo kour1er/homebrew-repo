@@ -1,36 +1,23 @@
 class DovecotDev < Formula
   desc "IMAP/POP3 server"
-  homepage "http://dovecot.org/"
-  url "https://github.com/dovecot/core/archive/refs/tags/2.3.20.tar.gz"
-  version "2.3.20"
-  sha256 "f5faf1a4e325242ef2625f01fa6a0c2ae7b1f76d13826f72a48efe4d25b940bf"
+  homepage "https://dovecot.org/"
+  url "https://dovecot.org/releases/2.3/dovecot-2.3.20.tar.gz"
+  sha256 "caa832eb968148abdf35ee9d0f534b779fa732c0ce4a913d9ab8c3469b218552"
   license all_of: ["BSD-3-Clause", "LGPL-2.1-or-later", "MIT", "Unicode-DFS-2016", :public_domain]
 
-  depends_on "pkg-config" => :build
-  depends_on "openssl@1.1"
-  depends_on "clucene"
-  depends_on "cmake"
+  depends_on "openssl@3"
   depends_on "icu4c"
+
+  depends_on "pkg-config" => :build
+  depends_on "cmake"
+
+  depends_on "clucene"
   depends_on "libstemmer-dev"
   depends_on "solr"
 
   uses_from_macos "bzip2"
+  uses_from_macos "libxcrypt"
   uses_from_macos "sqlite"
-
-  ###############################################################################
-  # this is for flatcurve #
-  ###############################################################################
-  # depends_on "xapian"
-  # depends_on "libexttextcat"
-  # depends_on "automake"
-  # depends_on "libtool"
-
-  # resource "flatcurve" do
-  #   url "https://github.com/slusarz/dovecot-fts-flatcurve/archive/refs/heads/master.zip"
-  #   sha256 "373cb90cf1c091e30dcc8611e11f4b2997e721f38198f5f16c743178b0c44655"
-  #   # url "https://github.com/slusarz/dovecot-fts-flatcurve/archive/refs/tags/v0.1.0.zip"
-  #   # sha256 "f6ba04d80df035346e15a51f2a0a3bdb83f23b7a1e7494fd1b6071a9b09ce549"
-  # end
 
   resource "pigeonhole" do
     url "https://pigeonhole.dovecot.org/releases/2.3/dovecot-2.3-pigeonhole-0.5.20.tar.gz"
@@ -44,23 +31,23 @@ class DovecotDev < Formula
   end
 
   resource "xaps" do
-    url "https://github.com/st3fan/dovecot-xaps-plugin/archive/v0.8.tar.gz"
-    sha256 "315eb0a7507c94884f636fe348f8ac576916325225fd644fc3e43fa5c28f6433"
+      url "https://github.com/st3fan/dovecot-xaps-plugin/archive/v0.8.tar.gz"
+      sha256 "315eb0a7507c94884f636fe348f8ac576916325225fd644fc3e43fa5c28f6433"
   end
 
   # Fix -flat_namespace being used on Big Sur and later.
   patch do
-    url "https://raw.githubusercontent.com/kour1er/homebrew-repo/main/Patches/dovecot_patch.diff"
-    sha256 "35acd6aebc19843f1a2b3a63e880baceb0f5278ab1ace661e57a502d9d78c93c"
+      url "https://raw.githubusercontent.com/kour1er/homebrew-repo/main/Patches/dovecot_patch.diff"
+      sha256 "35acd6aebc19843f1a2b3a63e880baceb0f5278ab1ace661e57a502d9d78c93c"
   end
 
   def install
     args = %W[
       --prefix=#{prefix}
+      --disable-dependency-tracking
       --libexecdir=#{libexec}
       --sysconfdir=#{etc}
       --localstatedir=#{var}
-      --disable-dependency-tracking
       --with-pam
       --with-sqlite
       --with-bzlib
@@ -114,66 +101,32 @@ class DovecotDev < Formula
       system "make", "install"
     end
 
-  #######################
-  # Flatcurve FTS plugin
-  #######################
-#     resource("flatcurve").stage do
-#     ENV.append_to_cflags "-std=gnu++11"
-#     ENV["CXXFLAGS"] = '-std=gnu++0x'
-#
-#       args = %W[
-#         --with-dovecot=#{lib}/dovecot
-#         --prefix=#{prefix}/dovecot
-#       ]
-#
-#       system "./autogen.sh"
-#       system "./configure", *args
-#       system "make", "install"
-#     end
-  #######################
-  # END of plugins
-  #######################
   end
 
-  def post_install
-    (var/"log/dovecot").mkpath
-  end
-
-  plist_options startup: true
-  def plist
+  def caveats
     <<~EOS
-      <?xml version="1.0" encoding="UTF-8"?>
-      <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-      <plist version="1.0">
-        <dict>
-          <key>Label</key>
-          <string>#{plist_name}</string>
-          <key>KeepAlive</key>
-          <false/>
-          <key>RunAtLoad</key>
-          <true/>
-          <key>ProgramArguments</key>
-          <array>
-            <string>#{opt_sbin}/dovecot</string>
-            <string>-F</string>
-          </array>
-          <key>StandardErrorPath</key>
-          <string>#{var}/log/dovecot/dovecot.log</string>
-          <key>StandardOutPath</key>
-          <string>#{var}/log/dovecot/dovecot.log</string>
-          <key>SoftResourceLimits</key>
-          <dict>
-          <key>NumberOfFiles</key>
-          <integer>1000</integer>
-          </dict>
-          <key>HardResourceLimits</key>
-          <dict>
-          <key>NumberOfFiles</key>
-          <integer>1024</integer>
-          </dict>
-        </dict>
-      </plist>
+      For Dovecot to work, you may need to create a dovecot user
+      and group depending on your configuration file options.
     EOS
   end
 
+  plist_options startup: true
+
+  service do
+    run [opt_sbin/"dovecot", "-F"]
+    environment_variables PATH: std_service_path_env
+    error_log_path var/"log/dovecot/dovecot.log"
+    log_path var/"log/dovecot/dovecot.log"
+  end
+
+  test do
+    assert_match version.to_s, shell_output("#{sbin}/dovecot --version")
+
+    cp_r share/"doc/dovecot/example-config", testpath/"example"
+    inreplace testpath/"example/conf.d/10-master.conf" do |s|
+      s.gsub! "#default_login_user = dovenull", "default_login_user = #{ENV["USER"]}"
+      s.gsub! "#default_internal_user = dovecot", "default_internal_user = #{ENV["USER"]}"
+    end
+    system bin/"doveconf", "-c", testpath/"example/dovecot.conf"
+  end
 end
