@@ -5,15 +5,13 @@ class DovecotDev < Formula
   sha256 "caa832eb968148abdf35ee9d0f534b779fa732c0ce4a913d9ab8c3469b218552"
   license all_of: ["BSD-3-Clause", "LGPL-2.1-or-later", "MIT", "Unicode-DFS-2016", :public_domain]
 
-  depends_on "openssl@3"
-  depends_on "icu4c"
-
-  depends_on "pkg-config" => :build
-  depends_on "cmake"
-
   depends_on "clucene"
+  depends_on "cmake"
+  depends_on "icu4c"
   depends_on "libstemmer-dev"
+  depends_on "pkg-config" => :build
   depends_on "solr"
+  depends_on "openssl@3"
 
   uses_from_macos "bzip2"
   uses_from_macos "libxcrypt"
