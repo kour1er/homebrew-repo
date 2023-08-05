@@ -1,9 +1,9 @@
 class RspamdDev < Formula
   desc "Rspamd filtering system is created as a replacement of popular spamassassin spamd and is designed to be fast, modular and easily extendable system."
   homepage "https://github.com/rspamd/rspamd/"
-  url "https://github.com/rspamd/rspamd/archive/refs/tags/3.5.tar.gz"
-  version "3.5"
-  sha256 "2d6bd94942acdd3203cf31ef023eb2356c74d5f0e834b7a0e2017004d4ad5938"
+  url "https://github.com/rspamd/rspamd/archive/refs/tags/3.6.tar.gz"
+  version "3.6"
+  sha256 "bae279f6365f709db9fc3af2dba0babcb8d19da4b0095953eb94f37b6733d5f7"
 
   depends_on "cmake"
   depends_on "fann"
