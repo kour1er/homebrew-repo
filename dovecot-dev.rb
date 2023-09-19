@@ -20,12 +20,6 @@ class DovecotDev < Formula
   resource "pigeonhole" do
     url "https://pigeonhole.dovecot.org/releases/2.3/dovecot-2.3-pigeonhole-0.5.21.tar.gz"
     sha256 "1ca71d2659076712058a72030288f150b2b076b0306453471c5261498d3ded27"
-
-    # Fix -flat_namespace being used on Big Sur and later.
-    patch do
-      url "https://raw.githubusercontent.com/kour1er/homebrew-repo/main/Patches/dovecot_patch.diff"
-      sha256 "35acd6aebc19843f1a2b3a63e880baceb0f5278ab1ace661e57a502d9d78c93c"
-    end
   end
 
   resource "xaps" do
@@ -33,10 +27,17 @@ class DovecotDev < Formula
       sha256 "315eb0a7507c94884f636fe348f8ac576916325225fd644fc3e43fa5c28f6433"
   end
 
-  # Fix -flat_namespace being used on Big Sur and later.
+  # dbox-storage.c:296:32: error: no member named 'st_atim' in 'struct stat'
+  # dbox-storage.c:297:24: error: no member named 'st_ctim' in 'struct stat'
+  # Following two patches submitted upstream at https://github.com/dovecot/core/pull/211
   patch do
-      url "https://raw.githubusercontent.com/kour1er/homebrew-repo/main/Patches/dovecot_patch.diff"
-      sha256 "35acd6aebc19843f1a2b3a63e880baceb0f5278ab1ace661e57a502d9d78c93c"
+    url "https://github.com/dovecot/core/commit/6b2eb995da62b8eca9d8f713bd5858d3d9be8062.patch?full_index=1"
+    sha256 "3e3f74b95f95a1587a804e9484467b1ed77396376b0a18be548e91e1b904ae1b"
+  end
+
+  patch do
+    url "https://github.com/dovecot/core/commit/eca7b6b9984dd1cb5fcd28f7ebccaa5301aead1e.patch?full_index=1"
+    sha256 "cedfeadd1cd43df3eebfcf3f465314fad4f6785c33000cbbd1349e3e0eb8c0ee"
   end
 
   def install
