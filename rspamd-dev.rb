@@ -1,4 +1,4 @@
-class RspamdInt < Formula
+class RspamdDev < Formula
   desc "Rspamd filtering system is created as a replacement of popular spamassassin spamd and is designed to be fast, modular and easily extendable system."
   homepage "https://github.com/rspamd/rspamd/"
   url "https://github.com/rspamd/rspamd/archive/refs/tags/3.7.1.tar.gz"
