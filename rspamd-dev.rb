@@ -1,9 +1,8 @@
 class RspamdDev < Formula
   desc "Rspamd filtering system is created as a replacement of popular spamassassin spamd and is designed to be fast, modular and easily extendable system."
   homepage "https://github.com/rspamd/rspamd/"
-  url "https://github.com/rspamd/rspamd/archive/refs/tags/3.7.1.tar.gz"
-  version "3.7.1_2"
-  sha256 "2b3c796d14dd36c2d8342e60c89cf035628e80e1e03834dbf6af7ca43a64fbef"
+  url "https://github.com/rspamd/rspamd/archive/refs/tags/3.7.2.tar.gz"
+  sha256 "5bc3fe6bcc26c197ccba9552fda0baa57f9a43bad9084d8d90b1bf901a20397e"
 
   depends_on "cmake"
   depends_on "fann"
@@ -73,28 +72,12 @@ end
     EOS
   end
 
-  def plist
-    <<~EOS
-      <?xml version="1.0" encoding="UTF-8"?>
-      <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-      <plist version="1.0">
-        <dict>
-          <key>Label</key>
-          <string>#{plist_name}</string>
-          <key>ProgramArguments</key>
-          <array>
-            <string>#{bin}/rspamd</string>
-            <string>-f</string>
-          </array>
-          <key>StandardErrorPath</key>
-          <string>#{var}/log/rspamd.log</string>
-          <key>StandardOutPath</key>
-          <string>#{var}/log/rspamd.log</string>
-          <key>RunAtLoad</key>
-          <true/>
-        </dict>
-      </plist>
-    EOS
+  service do
+    run [opt_bin/"rspamd", "-f"]
+    log_path var/"log/rspamd.log"
+    error_log_path var/"log/rspamd.log"
+    keep_alive false
+    working_dir HOMEBREW_PREFIX
   end
 
   test do
