@@ -1,8 +1,8 @@
 class PounceDev < Formula
   desc "Pounce is a multi-client, TLS-only IRC bouncer. It maintains a persistent connection to an IRC server, acting as a proxy and buffer for a number of clients."
-  url "https://git.causal.agency/pounce/snapshot/pounce-3.1.tar.gz"
-  version "3.1"
-  sha256 "97f245556b1cc940553fca18f4d7d82692e6c11a30f612415e5e391e5d96604e"
+  url "https://git.causal.agency/pounce/snapshot/pounce-41e471e7a77939f9ca1faab32f4f2d84c293d46b.tar.gz"
+  version "3.2"
+  sha256 "bb9cf3b4ccd250e957baf527d92e1e05f60222fd5fd632e4cd9dbeb59d41644f"
 
   depends_on "pkgconfig"
   depends_on "libretls"
