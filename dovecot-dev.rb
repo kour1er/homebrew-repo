@@ -23,8 +23,8 @@ class DovecotDev < Formula
   end
 
   resource "xaps" do
-      url "https://github.com/st3fan/dovecot-xaps-plugin/archive/v0.8.tar.gz"
-      sha256 "315eb0a7507c94884f636fe348f8ac576916325225fd644fc3e43fa5c28f6433"
+      url "https://github.com/freswa/dovecot-xaps-plugin/archive/refs/tags/v1.0.tar.gz"
+      sha256 "3b7a000730315a4b205da8af24b10081a8cab2f6aa32cc19e3729ba15090a332"
   end
 
   # dbox-storage.c:296:32: error: no member named 'st_atim' in 'struct stat'
