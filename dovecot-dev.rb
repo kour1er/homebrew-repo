@@ -6,13 +6,16 @@ class DovecotDev < Formula
   sha256 "05b11093a71c237c2ef309ad587510721cc93bbee6828251549fc1586c36502d"
   license all_of: ["BSD-3-Clause", "LGPL-2.1-or-later", "MIT", "Unicode-DFS-2016", :public_domain]
 
-  depends_on "clucene"
+  option "with-solr", "Compiles with optional Solr support"
+
   depends_on "cmake"
   depends_on "icu4c"
   depends_on "libstemmer-dev"
   depends_on "pkg-config" => :build
-  depends_on "solr"
   depends_on "openssl@3"
+
+  depends_on "solr" if build.with? "solr"
+  depends_on "clucene" if build.with? "solr"
 
   uses_from_macos "bzip2"
   uses_from_macos "libxcrypt"
@@ -54,10 +57,14 @@ class DovecotDev < Formula
       --with-zlib
       --with-ssl=openssl
       --with-icu
-      --with-lucene
       --with-stemmer
-      --with-solr
     ]
+
+  if build.with? "solr"
+      puts "building with solr..."
+      args << "--with-lucene"
+      args << "--with-solr"
+    end
 
     system "./configure", *args
     system "make", "install"
