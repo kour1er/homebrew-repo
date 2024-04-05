@@ -2,11 +2,12 @@ class DovecotDev < Formula
   desc "IMAP/POP3 server"
   homepage "https://dovecot.org/"
   url "https://dovecot.org/releases/2.3/dovecot-2.3.21.tar.gz"
-  version "2.3.21"
+  version "2.3.21_1"
   sha256 "05b11093a71c237c2ef309ad587510721cc93bbee6828251549fc1586c36502d"
   license all_of: ["BSD-3-Clause", "LGPL-2.1-or-later", "MIT", "Unicode-DFS-2016", :public_domain]
 
   option "with-solr", "Compiles with optional Solr support"
+  option "with-flatcurve", "Compiles with optional Flatcurve support"
 
   depends_on "cmake"
   depends_on "icu4c"
@@ -15,7 +16,12 @@ class DovecotDev < Formula
   depends_on "openssl@3"
 
   depends_on "solr" if build.with? "solr"
-  depends_on "clucene" if build.with? "solr"
+  depends_on "xapian" if build.with? "flatcurve"
+  # depends_on "libtextcat" if build.with? "flatcurve"
+  depends_on "libtool" if build.with? "flatcurve"
+  depends_on "gettext" if build.with? "flatcurve"
+  depends_on "autoconf" if build.with? "flatcurve"
+  depends_on "automake" if build.with? "flatcurve"
 
   uses_from_macos "bzip2"
   uses_from_macos "libxcrypt"
@@ -24,6 +30,11 @@ class DovecotDev < Formula
   resource "pigeonhole" do
     url "https://pigeonhole.dovecot.org/releases/2.3/dovecot-2.3-pigeonhole-0.5.21.tar.gz"
     sha256 "1ca71d2659076712058a72030288f150b2b076b0306453471c5261498d3ded27"
+  end
+
+  resource "flatcurve" do
+      url "https://github.com/slusarz/dovecot-fts-flatcurve/archive/refs/tags/v1.0.2.tar.gz"
+      sha256 "4ef23d757fed47b55a98bb34df4944a09c06299fd70b5f3a765991fc90a8745a"
   end
 
   resource "xaps" do
@@ -62,16 +73,34 @@ class DovecotDev < Formula
 
   if build.with? "solr"
       puts "building with solr..."
-      args << "--with-lucene"
       args << "--with-solr"
     end
 
     system "./configure", *args
     system "make", "install"
 
+    ################################
+    # Flatcurve plugin
+    ################################
+    if build.with? "flatcurve"
+        puts "compiling Flatcurve plugin..."
+        resource("flatcurve").stage do
+            args = %W[
+                --with-dovecot=#{lib}/dovecot
+                --prefix=#{prefix}
+            ]
+
+            system "./autogen.sh"
+            system "./configure", *args
+            system "make"
+            system "make", "install"
+        end
+    end
+
     ####################
     # Pigeonhole plugin
     ####################
+    puts "building Pigeonhole plugin..."
     resource("pigeonhole").stage do
       args = %W[
         --disable-dependency-tracking
@@ -87,6 +116,7 @@ class DovecotDev < Formula
     ################################
     # XAPS push notification plugin
     ################################
+    puts "building XAPS plugin..."
     resource("xaps").stage do
       inreplace "CMakeLists.txt" do |s|
         s.sub! "include_directories(/usr/local/include/dovecot)", "include_directories(${DOVECOTINC})"
