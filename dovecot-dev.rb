@@ -1,12 +1,9 @@
 class DovecotDev < Formula
   desc "IMAP/POP3 server"
   homepage "https://dovecot.org/"
-  url "https://dovecot.org/releases/2.3/dovecot-2.3.21.tar.gz"
-  sha256 "05b11093a71c237c2ef309ad587510721cc93bbee6828251549fc1586c36502d"
+  url "https://dovecot.org/releases/2.3/dovecot-2.3.21.1.tar.gz"
+  sha256 "2d90a178c4297611088bf7daae5492a3bc3d5ab6328c3a032eb425d2c249097e"
   license all_of: ["BSD-3-Clause", "LGPL-2.1-or-later", "MIT", "Unicode-DFS-2016", :public_domain]
-
-  option "with-solr", "Compiles with optional Solr support"
-  option "with-flatcurve", "Compiles with optional Flatcurve support"
 
   depends_on "cmake"
   depends_on "icu4c"
@@ -14,21 +11,19 @@ class DovecotDev < Formula
   depends_on "pkg-config" => :build
   depends_on "openssl@3"
 
-  depends_on "solr" if build.with? "solr"
-  depends_on "xapian" if build.with? "flatcurve"
-  # depends_on "libtextcat" if build.with? "flatcurve"
-  depends_on "libtool" if build.with? "flatcurve"
-  depends_on "gettext" if build.with? "flatcurve"
-  depends_on "autoconf" if build.with? "flatcurve"
-  depends_on "automake" if build.with? "flatcurve"
+  depends_on "xapian"
+  depends_on "libtool"
+  depends_on "gettext"
+  depends_on "autoconf"
+  depends_on "automake"
 
   uses_from_macos "bzip2"
   uses_from_macos "libxcrypt"
   uses_from_macos "sqlite"
 
   resource "pigeonhole" do
-    url "https://pigeonhole.dovecot.org/releases/2.3/dovecot-2.3-pigeonhole-0.5.21.tar.gz"
-    sha256 "1ca71d2659076712058a72030288f150b2b076b0306453471c5261498d3ded27"
+    url "https://pigeonhole.dovecot.org/releases/2.3/dovecot-2.3-pigeonhole-0.5.21.1.tar.gz"
+    sha256 "0377db284b620723de060431115fb2e7791e1df4321411af718201d6925c4692"
   end
 
   resource "flatcurve" do
@@ -41,8 +36,6 @@ class DovecotDev < Formula
       sha256 "3b7a000730315a4b205da8af24b10081a8cab2f6aa32cc19e3729ba15090a332"
   end
 
-  # dbox-storage.c:296:32: error: no member named 'st_atim' in 'struct stat'
-  # dbox-storage.c:297:24: error: no member named 'st_ctim' in 'struct stat'
   # Following two patches submitted upstream at https://github.com/dovecot/core/pull/211
   patch do
     url "https://github.com/dovecot/core/commit/6b2eb995da62b8eca9d8f713bd5858d3d9be8062.patch?full_index=1"
@@ -70,30 +63,23 @@ class DovecotDev < Formula
       --with-stemmer
     ]
 
-  if build.with? "solr"
-      puts "building with solr..."
-      args << "--with-solr"
-    end
-
     system "./configure", *args
     system "make", "install"
 
     ################################
     # Flatcurve plugin
     ################################
-    if build.with? "flatcurve"
-        puts "compiling Flatcurve plugin..."
-        resource("flatcurve").stage do
-            args = %W[
-                --with-dovecot=#{lib}/dovecot
-                --prefix=#{prefix}
-            ]
+    puts "compiling Flatcurve plugin..."
+    resource("flatcurve").stage do
+        args = %W[
+            --with-dovecot=#{lib}/dovecot
+            --prefix=#{prefix}
+        ]
 
-            system "./autogen.sh"
-            system "./configure", *args
-            system "make"
-            system "make", "install"
-        end
+        system "./autogen.sh"
+        system "./configure", *args
+        system "make"
+        system "make", "install"
     end
 
     ####################
